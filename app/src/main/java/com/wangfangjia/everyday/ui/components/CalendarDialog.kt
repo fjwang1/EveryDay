@@ -8,6 +8,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -51,22 +52,28 @@ fun CalendarDialog(
         Card(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
-            shape = RoundedCornerShape(16.dp)
+                .padding(20.dp),
+            shape = RoundedCornerShape(20.dp),
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surface
+            ),
+            elevation = CardDefaults.cardElevation(
+                defaultElevation = 8.dp
+            )
         ) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp)
+                    .padding(24.dp)
             ) {
                 // 月份标题
                 Text(
                     text = yearMonth.format(displayFormatter),
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold,
+                    style = MaterialTheme.typography.titleLarge,
+                    color = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(bottom = 16.dp),
+                        .padding(bottom = 20.dp),
                     textAlign = TextAlign.Center
                 )
                 
@@ -78,7 +85,7 @@ fun CalendarDialog(
                     listOf("日", "一", "二", "三", "四", "五", "六").forEach { day ->
                         Text(
                             text = day,
-                            fontSize = 14.sp,
+                            style = MaterialTheme.typography.labelMedium,
                             modifier = Modifier.weight(1f),
                             textAlign = TextAlign.Center,
                             color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
@@ -86,7 +93,7 @@ fun CalendarDialog(
                     }
                 }
                 
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(12.dp))
                 
                 // 日期网格
                 CalendarGrid(
@@ -164,27 +171,29 @@ private fun CalendarDayItem(
 ) {
     Box(
         modifier = Modifier
-            .size(40.dp)
+            .size(44.dp)
             .padding(4.dp)
             .background(
                 color = when {
                     isSelected -> MaterialTheme.colorScheme.primary
+                    hasData -> MaterialTheme.colorScheme.primaryContainer
                     else -> Color.Transparent
                 },
-                shape = RoundedCornerShape(8.dp)
+                shape = RoundedCornerShape(12.dp)
             )
             .clickable(onClick = onClick),
         contentAlignment = Alignment.Center
     ) {
         Text(
             text = day.toString(),
-            fontSize = 14.sp,
+            style = MaterialTheme.typography.bodyMedium,
             color = when {
                 isSelected -> MaterialTheme.colorScheme.onPrimary
-                hasData -> MaterialTheme.colorScheme.onSurface
+                hasData -> MaterialTheme.colorScheme.primary
                 else -> MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f)
             },
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
+            fontWeight = if (isSelected || hasData) FontWeight.SemiBold else FontWeight.Normal
         )
     }
 }

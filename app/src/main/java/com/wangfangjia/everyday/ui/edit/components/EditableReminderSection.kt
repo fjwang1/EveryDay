@@ -37,14 +37,18 @@ fun EditableReminderSection(
     
     Card(
         modifier = modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)
+            containerColor = MaterialTheme.colorScheme.surface
+        ),
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 0.dp
         )
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp)
+                .padding(20.dp)
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -53,8 +57,8 @@ fun EditableReminderSection(
             ) {
                 Text(
                     text = "每日提醒",
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.onSurface
                 )
                 
                 IconButton(onClick = { 
@@ -64,18 +68,19 @@ fun EditableReminderSection(
                 }) {
                     Icon(
                         imageVector = Icons.Default.Add,
-                        contentDescription = "新增提醒"
+                        contentDescription = "新增提醒",
+                        tint = MaterialTheme.colorScheme.primary
                     )
                 }
             }
             
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(16.dp))
             
             if (reminders.isEmpty()) {
                 Text(
                     text = "暂无提醒，点击右上角添加",
-                    fontSize = 14.sp,
-                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f),
                     modifier = Modifier.padding(vertical = 8.dp)
                 )
             } else {

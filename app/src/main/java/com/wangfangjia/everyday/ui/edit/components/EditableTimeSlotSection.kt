@@ -1,6 +1,7 @@
 package com.wangfangjia.everyday.ui.edit.components
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -8,13 +9,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.wangfangjia.everyday.data.models.TimeSlotTask
 
 /**
- * 可编辑时间段任务模块
+ * 可编辑时间段任务模块 - 现代化设计
  */
 @Composable
 fun EditableTimeSlotSection(
@@ -24,28 +23,39 @@ fun EditableTimeSlotSection(
 ) {
     Card(
         modifier = modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)
+            containerColor = MaterialTheme.colorScheme.surface
+        ),
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 0.dp
         )
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp)
+                .padding(20.dp)
         ) {
             Text(
                 text = "今日任务",
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(bottom = 12.dp)
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onSurface,
+                modifier = Modifier.padding(bottom = 16.dp)
             )
             
-            timeSlotTasks.forEach { task ->
+            timeSlotTasks.forEachIndexed { index, task ->
                 EditableTimeSlotItem(
                     task = task,
                     onTaskChanged = onTaskChanged
                 )
-                Spacer(modifier = Modifier.height(16.dp))
+                if (index < timeSlotTasks.size - 1) {
+                    Spacer(modifier = Modifier.height(20.dp))
+                    Divider(
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f),
+                        thickness = 1.dp
+                    )
+                    Spacer(modifier = Modifier.height(20.dp))
+                }
             }
         }
     }
@@ -61,11 +71,10 @@ private fun EditableTimeSlotItem(
     ) {
         // 时间段标签
         Text(
-            text = "${task.startTime}～${task.endTime}",
-            fontSize = 14.sp,
-            fontWeight = FontWeight.Medium,
-            color = MaterialTheme.colorScheme.primary,
-            modifier = Modifier.padding(bottom = 8.dp)
+            text = "${task.startTime} - ${task.endTime}",
+            style = MaterialTheme.typography.titleSmall,
+            color = MaterialTheme.colorScheme.onSurface,
+            modifier = Modifier.padding(bottom = 12.dp)
         )
         
         // 任务详情输入框
@@ -90,10 +99,15 @@ private fun EditableTimeSlotItem(
             },
             modifier = Modifier.fillMaxWidth(),
             minLines = 2,
-            maxLines = 4
+            maxLines = 4,
+            shape = RoundedCornerShape(12.dp),
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
+                unfocusedBorderColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)
+            )
         )
         
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(12.dp))
         
         // 备注输入框
         OutlinedTextField(
@@ -117,25 +131,34 @@ private fun EditableTimeSlotItem(
             },
             modifier = Modifier.fillMaxWidth(),
             minLines = 1,
-            maxLines = 2
+            maxLines = 2,
+            shape = RoundedCornerShape(12.dp),
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
+                unfocusedBorderColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)
+            )
         )
         
         // 完成状态勾选框
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 8.dp),
+                .padding(top = 12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Checkbox(
                 checked = task.isCompleted,
                 onCheckedChange = { isChecked ->
                     onTaskChanged(task.copy(isCompleted = isChecked))
-                }
+                },
+                colors = CheckboxDefaults.colors(
+                    checkedColor = MaterialTheme.colorScheme.primary
+                )
             )
             Text(
                 text = "已完成",
-                fontSize = 14.sp,
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier.padding(start = 8.dp)
             )
         }

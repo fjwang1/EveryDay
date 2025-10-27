@@ -44,23 +44,27 @@ fun EditScreen(
     }
     
     Scaffold(
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             TopAppBar(
                 title = {
                     Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text(
-                            text = viewModel.formatDateForDisplay(currentDate),
-                            fontSize = 20.sp,
-                            fontWeight = FontWeight.Bold
-                        )
                         IconButton(onClick = { showCalendarDialog = true }) {
                             Icon(
                                 imageVector = Icons.Default.DateRange,
-                                contentDescription = "选择日期"
+                                contentDescription = "选择日期",
+                                tint = MaterialTheme.colorScheme.primary
                             )
                         }
+                        Text(
+                            text = viewModel.formatDateForDisplay(currentDate),
+                            style = MaterialTheme.typography.titleLarge,
+                            color = MaterialTheme.colorScheme.onBackground
+                        )
                     }
                 },
                 navigationIcon = {
@@ -73,7 +77,8 @@ fun EditScreen(
                     }) {
                         Icon(
                             imageVector = Icons.Default.ArrowBack,
-                            contentDescription = "返回"
+                            contentDescription = "返回",
+                            tint = MaterialTheme.colorScheme.primary
                         )
                     }
                 },
@@ -89,16 +94,21 @@ fun EditScreen(
                         if (isSaving) {
                             CircularProgressIndicator(
                                 modifier = Modifier.size(24.dp),
-                                strokeWidth = 2.dp
+                                strokeWidth = 2.dp,
+                                color = MaterialTheme.colorScheme.primary
                             )
                         } else {
                             Icon(
                                 imageVector = Icons.Default.Check,
-                                contentDescription = "保存"
+                                contentDescription = "保存",
+                                tint = MaterialTheme.colorScheme.primary
                             )
                         }
                     }
-                }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.background
+                )
             )
         }
     ) { paddingValues ->
@@ -108,7 +118,7 @@ fun EditScreen(
                     .fillMaxSize()
                     .padding(paddingValues)
                     .verticalScroll(rememberScrollState())
-                    .padding(16.dp),
+                    .padding(horizontal = 20.dp, vertical = 16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 // 每日提醒模块（可编辑）
@@ -130,19 +140,23 @@ fun EditScreen(
                 // 快乐日历模块（可编辑）
                 Card(
                     modifier = Modifier.fillMaxWidth(),
+                    shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp),
                     colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)
+                        containerColor = com.wangfangjia.everyday.ui.theme.HappyCalendarBackground
+                    ),
+                    elevation = CardDefaults.cardElevation(
+                        defaultElevation = 0.dp
                     )
                 ) {
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(16.dp)
+                            .padding(20.dp)
                     ) {
                         Text(
                             text = "快乐日历",
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.Bold,
+                            style = MaterialTheme.typography.titleMedium,
+                            color = MaterialTheme.colorScheme.onSurface,
                             modifier = Modifier.padding(bottom = 12.dp)
                         )
                         
@@ -160,19 +174,23 @@ fun EditScreen(
                 // 日记模块（可编辑）
                 Card(
                     modifier = Modifier.fillMaxWidth(),
+                    shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp),
                     colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)
+                        containerColor = MaterialTheme.colorScheme.surface
+                    ),
+                    elevation = CardDefaults.cardElevation(
+                        defaultElevation = 0.dp
                     )
                 ) {
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(16.dp)
+                            .padding(20.dp)
                     ) {
                         Text(
                             text = "今日日记",
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.Bold,
+                            style = MaterialTheme.typography.titleMedium,
+                            color = MaterialTheme.colorScheme.onSurface,
                             modifier = Modifier.padding(bottom = 12.dp)
                         )
                         

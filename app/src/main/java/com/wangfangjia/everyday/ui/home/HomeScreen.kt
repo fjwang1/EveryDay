@@ -35,33 +35,41 @@ fun HomeScreen(
     var showCalendarDialog by remember { mutableStateOf(false) }
     
     Scaffold(
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             TopAppBar(
                 title = {
                     Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text(
-                            text = viewModel.formatDateForDisplay(currentDate),
-                            fontSize = 20.sp,
-                            fontWeight = FontWeight.Bold
-                        )
                         IconButton(onClick = { showCalendarDialog = true }) {
                             Icon(
                                 imageVector = Icons.Default.DateRange,
-                                contentDescription = "选择日期"
+                                contentDescription = "选择日期",
+                                tint = MaterialTheme.colorScheme.primary
                             )
                         }
+                        Text(
+                            text = viewModel.formatDateForDisplay(currentDate),
+                            style = MaterialTheme.typography.titleLarge,
+                            color = MaterialTheme.colorScheme.onBackground
+                        )
                     }
                 },
                 actions = {
                     IconButton(onClick = { onNavigateToEdit(currentDate) }) {
                         Icon(
                             imageVector = Icons.Default.Edit,
-                            contentDescription = "编辑"
+                            contentDescription = "编辑",
+                            tint = MaterialTheme.colorScheme.primary
                         )
                     }
-                }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.background
+                )
             )
         }
     ) { paddingValues ->
@@ -72,7 +80,9 @@ fun HomeScreen(
                     .padding(paddingValues),
                 contentAlignment = Alignment.Center
             ) {
-                CircularProgressIndicator()
+                CircularProgressIndicator(
+                    color = MaterialTheme.colorScheme.primary
+                )
             }
         } else {
             dailyData?.let { data ->
@@ -81,7 +91,7 @@ fun HomeScreen(
                         .fillMaxSize()
                         .padding(paddingValues)
                         .verticalScroll(rememberScrollState())
-                        .padding(16.dp),
+                        .padding(horizontal = 20.dp, vertical = 16.dp),
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     // 每日提醒模块
@@ -95,10 +105,10 @@ fun HomeScreen(
                         }
                     )
                     
-                    // 快乐日历模块
+                    // 快乐日历模块（只在有内容时显示）
                     HappyCalendarSection(content = data.happyCalendar)
                     
-                    // 日记模块
+                    // 日记模块（只在有内容时显示）
                     DiarySection(content = data.diary)
                 }
             }
