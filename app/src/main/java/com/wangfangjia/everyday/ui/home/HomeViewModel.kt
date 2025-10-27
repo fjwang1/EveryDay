@@ -68,12 +68,28 @@ class HomeViewModel(
      * 更新任务完成状态
      */
     fun updateTaskCompletion(timeSlotId: String, isCompleted: Boolean) {
+        // 乐观更新：立即更新 UI 状态，避免整页进入 loading
+        _dailyData.value = _dailyData.value?.let { data ->
+            val updatedTasks = data.timeSlotTasks.map { task ->
+                if (task.timeSlotId == timeSlotId) task.copy(isCompleted = isCompleted) else task
+            }
+            data.copy(timeSlotTasks = updatedTasks)
+        }
+
         viewModelScope.launch {
             try {
                 repository.updateTaskCompletion(_currentDate.value, timeSlotId, isCompleted)
-                loadData() // 重新加载数据以反映更改
+                // 删除：原先在此调用 loadData() 导致整页闪烁
+                // 不再触发全局加载，仅保持当前状态
             } catch (e: Exception) {
                 e.printStackTrace()
+                // 回滚 UI 状态
+                _dailyData.value = _dailyData.value?.let { data ->
+                    val revertedTasks = data.timeSlotTasks.map { task ->
+                        if (task.timeSlotId == timeSlotId) task.copy(isCompleted = !isCompleted) else task
+                    }
+                    data.copy(timeSlotTasks = revertedTasks)
+                }
             }
         }
     }
@@ -85,4 +101,3 @@ class HomeViewModel(
         return repository.formatDateForDisplay(date)
     }
 }
-

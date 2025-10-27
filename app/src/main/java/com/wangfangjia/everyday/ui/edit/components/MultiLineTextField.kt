@@ -32,11 +32,13 @@ fun MultiLineTextField(
         placeholder = {
             Text(
                 text = label,
-                style = TextStyle(
-                    brush = Brush.linearGradient(
-                        colors = listOf(
-                            Color.Gray.copy(alpha = 0.6f),
-                            Color.Gray.copy(alpha = 0.3f)
+                style = MaterialTheme.typography.bodySmall.merge(
+                    TextStyle(
+                        brush = Brush.linearGradient(
+                            colors = listOf(
+                                Color(0xFF9AA0A6).copy(alpha = 0.6f),
+                                Color(0xFF9AA0A6).copy(alpha = 0.2f)
+                            )
                         )
                     )
                 )
@@ -56,4 +58,3 @@ fun MultiLineTextField(
         )
     )
 }
-

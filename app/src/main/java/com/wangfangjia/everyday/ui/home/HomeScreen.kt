@@ -5,17 +5,17 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.wangfangjia.everyday.data.repository.DailyRepository
 import com.wangfangjia.everyday.ui.components.CalendarDialog
 import com.wangfangjia.everyday.ui.home.components.*
+import androidx.compose.ui.res.stringResource
+import com.wangfangjia.everyday.R
 
 /**
  * 首页
@@ -41,7 +41,7 @@ fun HomeScreen(
                 title = {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.Center,
+                        horizontalArrangement = Arrangement.Start,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         IconButton(onClick = { showCalendarDialog = true }) {
@@ -51,6 +51,7 @@ fun HomeScreen(
                                 tint = MaterialTheme.colorScheme.primary
                             )
                         }
+                        Spacer(modifier = Modifier.width(12.dp))
                         Text(
                             text = viewModel.formatDateForDisplay(currentDate),
                             style = MaterialTheme.typography.titleLarge,
@@ -59,11 +60,11 @@ fun HomeScreen(
                     }
                 },
                 actions = {
-                    IconButton(onClick = { onNavigateToEdit(currentDate) }) {
-                        Icon(
-                            imageVector = Icons.Default.Edit,
-                            contentDescription = "编辑",
-                            tint = MaterialTheme.colorScheme.primary
+                    TextButton(onClick = { onNavigateToEdit(currentDate) }) {
+                        Text(
+                            text = stringResource(R.string.edit),
+                            color = MaterialTheme.colorScheme.primary,
+                            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
                         )
                     }
                 },
@@ -127,4 +128,3 @@ fun HomeScreen(
         )
     }
 }
-

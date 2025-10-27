@@ -13,7 +13,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.wangfangjia.everyday.data.repository.DailyRepository
 import com.wangfangjia.everyday.ui.components.CalendarDialog
 import com.wangfangjia.everyday.ui.edit.components.*
@@ -142,7 +141,7 @@ fun EditScreen(
                     modifier = Modifier.fillMaxWidth(),
                     shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp),
                     colors = CardDefaults.cardColors(
-                        containerColor = com.wangfangjia.everyday.ui.theme.HappyCalendarBackground
+                        containerColor = MaterialTheme.colorScheme.surface
                     ),
                     elevation = CardDefaults.cardElevation(
                         defaultElevation = 0.dp

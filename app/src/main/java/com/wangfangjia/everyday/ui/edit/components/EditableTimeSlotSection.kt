@@ -87,11 +87,13 @@ private fun EditableTimeSlotItem(
             placeholder = {
                 Text(
                     text = "输入今日任务内容...",
-                    style = TextStyle(
-                        brush = Brush.linearGradient(
-                            colors = listOf(
-                                Color.Gray.copy(alpha = 0.6f),
-                                Color.Gray.copy(alpha = 0.3f)
+                    style = MaterialTheme.typography.bodySmall.merge(
+                        TextStyle(
+                            brush = Brush.linearGradient(
+                                colors = listOf(
+                                    Color(0xFF9AA0A6).copy(alpha = 0.6f),
+                                    Color(0xFF9AA0A6).copy(alpha = 0.2f)
+                                )
                             )
                         )
                     )
@@ -115,15 +117,17 @@ private fun EditableTimeSlotItem(
             onValueChange = { newNote ->
                 onTaskChanged(task.copy(note = newNote))
             },
-            label = { Text("备注（可选）") },
+            label = { Text("备注") },
             placeholder = {
                 Text(
                     text = "添加备注信息...",
-                    style = TextStyle(
-                        brush = Brush.linearGradient(
-                            colors = listOf(
-                                Color.Gray.copy(alpha = 0.6f),
-                                Color.Gray.copy(alpha = 0.3f)
+                    style = MaterialTheme.typography.bodySmall.merge(
+                        TextStyle(
+                            brush = Brush.linearGradient(
+                                colors = listOf(
+                                    Color(0xFF9AA0A6).copy(alpha = 0.6f),
+                                    Color(0xFF9AA0A6).copy(alpha = 0.2f)
+                                )
                             )
                         )
                     )
@@ -164,4 +168,3 @@ private fun EditableTimeSlotItem(
         }
     }
 }
-

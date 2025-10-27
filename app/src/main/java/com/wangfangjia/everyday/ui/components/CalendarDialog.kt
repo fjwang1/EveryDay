@@ -1,5 +1,7 @@
 package com.wangfangjia.everyday.ui.components
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -18,7 +20,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import java.time.LocalDate
 import java.time.YearMonth
@@ -27,6 +28,7 @@ import java.time.format.DateTimeFormatter
 /**
  * 日历弹窗
  */
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun CalendarDialog(
     currentDate: String,
@@ -111,6 +113,7 @@ fun CalendarDialog(
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 private fun CalendarGrid(
     yearMonth: YearMonth,
@@ -171,8 +174,9 @@ private fun CalendarDayItem(
 ) {
     Box(
         modifier = Modifier
-            .size(44.dp)
             .padding(4.dp)
+            .fillMaxWidth()
+            .aspectRatio(1f)
             .background(
                 color = when {
                     isSelected -> MaterialTheme.colorScheme.primary
@@ -197,4 +201,3 @@ private fun CalendarDayItem(
         )
     }
 }
-

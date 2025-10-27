@@ -20,30 +20,36 @@ fun HappyCalendarSection(
     content: String,
     modifier: Modifier = Modifier
 ) {
-    // 只在有内容时显示
-    if (content.isNotEmpty()) {
-        Card(
-            modifier = modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(16.dp),
-            colors = CardDefaults.cardColors(
-                containerColor = HappyCalendarBackground
-            ),
-            elevation = CardDefaults.cardElevation(
-                defaultElevation = 0.dp
-            )
+    // 统一：无论是否有内容都展示模块
+    Card(
+        modifier = modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        ),
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 0.dp
+        )
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(20.dp)
         ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(20.dp)
-            ) {
+            Text(
+                text = "快乐日历",
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onSurface,
+                modifier = Modifier.padding(bottom = 12.dp)
+            )
+
+            if (content.isEmpty()) {
                 Text(
-                    text = "快乐日历",
-                    style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.onSurface,
-                    modifier = Modifier.padding(bottom = 12.dp)
+                    text = "暂无快乐时刻",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f)
                 )
-                
+            } else {
                 Text(
                     text = content,
                     style = MaterialTheme.typography.bodyMedium,
@@ -54,4 +60,3 @@ fun HappyCalendarSection(
         }
     }
 }
-

@@ -12,14 +12,12 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import kotlin.math.roundToInt
 
 /**
@@ -111,7 +109,13 @@ fun EditableReminderSection(
     if (showAddDialog) {
         AlertDialog(
             onDismissRequest = { showAddDialog = false },
-            title = { Text(if (editingIndex != null) "编辑提醒" else "添加提醒") },
+            title = {
+                Text(
+                    text = if (editingIndex != null) "编辑提醒" else "添加提醒",
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+            },
             text = {
                 OutlinedTextField(
                     value = editingText,
@@ -120,21 +124,20 @@ fun EditableReminderSection(
                     placeholder = {
                         Text(
                             text = "输入提醒内容...",
-                            style = TextStyle(
-                                brush = Brush.linearGradient(
-                                    colors = listOf(
-                                        Color.Gray.copy(alpha = 0.6f),
-                                        Color.Gray.copy(alpha = 0.3f)
-                                    )
-                                )
-                            )
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
                         )
                     },
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = MaterialTheme.colorScheme.primary,
+                        cursorColor = MaterialTheme.colorScheme.primary,
+                        focusedLabelColor = MaterialTheme.colorScheme.primary
+                    )
                 )
             },
             confirmButton = {
-                TextButton(
+                Button(
                     onClick = {
                         if (editingText.isNotBlank()) {
                             val newReminders = reminders.toMutableList()
@@ -146,16 +149,26 @@ fun EditableReminderSection(
                             onRemindersChanged(newReminders)
                         }
                         showAddDialog = false
-                    }
+                    },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        contentColor = MaterialTheme.colorScheme.onPrimary
+                    )
                 ) {
                     Text("确定")
                 }
             },
             dismissButton = {
-                TextButton(onClick = { showAddDialog = false }) {
+                TextButton(
+                    onClick = { showAddDialog = false },
+                    colors = ButtonDefaults.textButtonColors(
+                        contentColor = MaterialTheme.colorScheme.primary
+                    )
+                ) {
                     Text("取消")
                 }
-            }
+            },
+            containerColor = MaterialTheme.colorScheme.surface
         )
     }
 }
@@ -220,11 +233,11 @@ private fun SwipeToDeleteItem(
             ) {
                 Text(
                     text = "• $reminder",
-                    fontSize = 14.sp,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier.weight(1f)
                 )
             }
         }
     }
 }
-
