@@ -120,7 +120,6 @@ fun EditableReminderSection(
                 OutlinedTextField(
                     value = editingText,
                     onValueChange = { editingText = it },
-                    label = { Text("提醒内容") },
                     placeholder = {
                         Text(
                             text = "输入提醒内容...",

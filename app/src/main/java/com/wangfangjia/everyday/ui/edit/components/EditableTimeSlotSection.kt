@@ -117,7 +117,6 @@ private fun EditableTimeSlotItem(
             onValueChange = { newNote ->
                 onTaskChanged(task.copy(note = newNote))
             },
-            label = { Text("备注") },
             placeholder = {
                 Text(
                     text = "添加备注信息...",

@@ -43,9 +43,9 @@ fun EditScreen(
     }
     
     Scaffold(
-        containerColor = MaterialTheme.colorScheme.background,
+        containerColor = MaterialTheme.colorScheme.surfaceVariant,
         topBar = {
-            TopAppBar(
+            TopAppBar(modifier = Modifier.statusBarsPadding(),
                 title = {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -106,7 +106,7 @@ fun EditScreen(
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.background
+                    containerColor = MaterialTheme.colorScheme.surfaceVariant
                 )
             )
         }
@@ -164,7 +164,6 @@ fun EditScreen(
                             onValueChange = { newContent ->
                                 viewModel.updateHappyCalendar(newContent)
                             },
-                            label = "记录今日快乐的事情",
                             minLines = 3
                         )
                     }
@@ -198,7 +197,6 @@ fun EditScreen(
                             onValueChange = { newContent ->
                                 viewModel.updateDiary(newContent)
                             },
-                            label = "记录今日的感想和总结",
                             minLines = 5
                         )
                     }

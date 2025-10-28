@@ -20,7 +20,9 @@ fun HappyCalendarSection(
     content: String,
     modifier: Modifier = Modifier
 ) {
-    // 统一：无论是否有内容都展示模块
+    if (content.isEmpty()) {
+        return
+    }
     Card(
         modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),

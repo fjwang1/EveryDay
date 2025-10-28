@@ -18,6 +18,9 @@ fun DiarySection(
     content: String,
     modifier: Modifier = Modifier
 ) {
+    if (content.isEmpty()) {
+        return
+    }
     Card(
         modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
