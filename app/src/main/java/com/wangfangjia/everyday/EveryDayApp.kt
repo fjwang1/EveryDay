@@ -12,10 +12,8 @@ class EveryDayApp : Application() {
     override fun onCreate() {
         super.onCreate()
         
-        // 创建通知渠道
         NotificationHelper.createNotificationChannel(this)
         
-        // 调度提醒通知
         NotificationScheduler.scheduleAllReminders(this)
     }
 }

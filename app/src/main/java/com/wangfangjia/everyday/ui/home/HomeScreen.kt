@@ -112,7 +112,7 @@ fun HomeScreen(
                     HappyCalendarSection(content = data.happyCalendar)
                     
                     // 日记模块
-                    HappyCalendarSection(content = data.diary)
+                    DiarySection(content = data.diary)
                 }
             }
         }

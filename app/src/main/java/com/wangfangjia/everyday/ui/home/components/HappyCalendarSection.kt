@@ -38,7 +38,7 @@ fun HappyCalendarSection(
                 .padding(20.dp)
         ) {
             Text(
-                text = "日记",
+                text = "快乐日历",
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier.padding(bottom = 12.dp)
