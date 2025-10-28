@@ -1,198 +1,169 @@
-# 每日任务规划App
+## EveryDay Android 项目架构与目录说明
 
-一个基于Android Jetpack Compose开发的每日任务规划和进度跟踪应用。
+本项目是一个使用 Kotlin 与 Jetpack Compose 构建的每日任务规划与进度跟踪应用，采用 MVVM + Repository 的清晰分层与现代 Android 构建体系（Gradle、Version Catalog、Gradle Wrapper）。本文档聚焦架构与目录/文件说明，帮助快速理解与维护项目。
 
-## 功能特性
+---
 
-### 核心功能
-1. **首页（只读模式）**
-   - 展示当日任务和完成进度
-   - 支持查看任意日期的任务数据
-   - 仅任务完成状态可操作
+### 项目概览
+- **单模块结构**：仅包含 `app` 模块，便于轻量维护与快速迭代。
+- **核心技术**：Jetpack Compose（UI）、Material3（设计体系）、DataStore（本地持久化）、Navigation Compose（导航）、WorkManager（后台任务）、Coroutines/Flow（异步）。
+- **目标系统与工具链**：
+  - Android Gradle Plugin（AGP）: 8.9.1（由版本目录管理）
+  - Kotlin: 2.0.21
+  - Gradle Wrapper: 8.11.1（`gradle/wrapper/gradle-wrapper.properties`）
+  - compileSdk: 35 / targetSdk: 35 / minSdk: 24
+  - JDK: 11
 
-2. **编辑页**
-   - 编辑当日或指定日期的任务内容
-   - 支持新增、编辑、删除提醒
-   - 可编辑时间段任务、快乐日历和日记
+---
 
-3. **日历弹窗**
-   - 选择查看不同日期的任务数据
-   - 灰色标记表示无数据的日期
+## 顶层目录与构建体系
 
-4. **推送通知**
-   - 中午13:00提醒更新任务进度
-   - 下午19:00提醒更新任务进度
-   - 晚上23:00提醒更新任务进度
+- `build.gradle.kts`
+  - 项目级构建脚本（顶层）。仅声明插件别名并 `apply false`，具体启用在 `app/build.gradle.kts`。
+  - 依赖与插件版本通过 Version Catalog 管理，提升一致性与可维护性。
 
-### 数据模块
+- `settings.gradle.kts`
+  - 仓库源配置（`pluginManagement` 与 `dependencyResolutionManagement`）。
+  - `rootProject.name = "EveryDay"` 指定工程名称。
+  - `include(":app")` 声明唯一模块。
 
-#### 每日提醒
-- 支持多条提醒内容
-- 当日无提醒时自动复用前一日内容
-- 支持左滑删除操作
+- `gradle/libs.versions.toml`
+  - **Version Catalog**：集中管理版本与库坐标。
+  - 关键版本：
+    - `agp = "8.9.1"`
+    - `kotlin = "2.0.21"`
+    - `composeBom = "2024.09.00"`
+    - Jetpack 组件版本（Activity Compose、Lifecycle、Navigation、WorkManager、DataStore 等）
+  - 关键库别名：
+    - `androidx-compose-bom`、`androidx-material3`、`androidx-navigation-compose`、`androidx-work-runtime-ktx`、`androidx-datastore-preferences`、`gson` 等
+  - 关键插件别名：
+    - `android-application`、`kotlin-android`、`kotlin-compose`
 
-#### 时间段任务（固定时间段）
-- 8:00～9:30
-- 10:00～11:00
-- 2:00～3:00
-- 3:00～4:00
-- 4:00～5:00
-- 5:00～6:00
-- 7:00～8:30
+- `gradle.properties`
+  - 全局 Gradle 行为与 Android 构建参数：
+    - `org.gradle.jvmargs=-Xmx2048m -Dfile.encoding=UTF-8`
+    - `android.useAndroidX=true`
+    - `kotlin.code.style=official`
+    - `android.nonTransitiveRClass=true`（更小的 R 类）
 
-每个时间段包含：
-- 任务详情
-- 完成状态勾选框
-- 备注（可选）
+- `gradle/wrapper/gradle-wrapper.properties`
+  - Gradle Wrapper 配置，指向 `gradle-8.11.1-bin.zip`。
+  - 搭配 `./gradlew` / `./gradlew.bat` 跨平台一致构建。
 
-#### 快乐日历
-- 记录今日快乐的事情
-- 多行文本输入
+- 文档
+  - `README.md`（本文档）：架构与目录说明。
+  - `DEVELOPMENT_GUIDE.md`：开发规范与快速开始。
+  - `BUILD_RELEASE.md`：发布与签名、ProGuard/R8 配置建议。
+  - `PROJECT_SUMMARY.md`：项目实施总结与完成项清单。
 
-#### 今日日记
-- 记录今日的感想和总结
-- 多行文本输入
+---
 
-## 技术架构
+## 模块结构（app）
 
-### 技术栈
-- **Kotlin** - 主要开发语言
-- **Jetpack Compose** - 声明式UI框架
-- **Material Design 3** - UI设计规范
-- **DataStore (Preferences)** - 本地数据持久化
-- **Navigation Compose** - 导航管理
-- **WorkManager** - 后台任务调度
-- **Coroutines & Flow** - 异步编程
+- `app/build.gradle.kts`
+  - 启用插件：`com.android.application`、`org.jetbrains.kotlin.android`、`org.jetbrains.kotlin.plugin.compose`。
+  - Android 配置：
+    - `namespace = "com.wangfangjia.everyday"`
+    - `compileSdk = 35`
+    - `defaultConfig { applicationId = "com.wangfangjia.everyday"; minSdk = 24; targetSdk = 35; versionCode = 1; versionName = "1.0" }`
+    - `buildFeatures { compose = true }`
+    - `compileOptions`/`kotlinOptions`（JDK/字节码目标 11）
+  - 依赖（由版本目录驱动）：
+    - Compose BOM + UI/Material3、Activity Compose、Lifecycle Runtime KTX、Lifecycle ViewModel Compose
+    - DataStore Preferences
+    - Navigation Compose
+    - WorkManager KTX
+    - Gson（JSON 序列化）
+    - 测试依赖（JUnit、AndroidX Test、Compose UI Test）
 
-### 项目结构
+- `app/proguard-rules.pro`
+  - 模块级混淆规则文件。当前为默认模板。
+  - 若启用 Release 混淆与资源压缩，建议参考 `BUILD_RELEASE.md` 增补对 Compose/DataStore/WorkManager/Gson 的保留规则。
 
-```
-app/src/main/java/com/wangfangjia/everyday/
-├── data/                           # 数据层
-│   ├── models/                     # 数据模型
-│   │   ├── DailyData.kt           # 每日数据模型
-│   │   ├── TimeSlotTask.kt        # 时间段任务模型
-│   │   └── TimeSlotDefinition.kt  # 时间段定义
-│   ├── DataStoreManager.kt        # DataStore管理器
-│   └── repository/                 # 仓库层
-│       └── DailyRepository.kt     # 每日数据仓库
-│
-├── ui/                             # UI层
-│   ├── theme/                      # 主题配置
-│   │   ├── Color.kt               # 颜色定义
-│   │   ├── Theme.kt               # 主题配置
-│   │   └── Type.kt                # 字体配置
-│   │
-│   ├── components/                 # 通用组件
-│   │   ├── CalendarDialog.kt      # 日历弹窗
-│   │   └── EmptyPlaceholder.kt    # 空状态占位符
-│   │
-│   ├── home/                       # 首页
-│   │   ├── HomeScreen.kt          # 首页主界面
-│   │   ├── HomeViewModel.kt       # 首页ViewModel
-│   │   └── components/            # 首页组件
-│   │       ├── ReminderSection.kt
-│   │       ├── TimeSlotSection.kt
-│   │       ├── HappyCalendarSection.kt
-│   │       └── DiarySection.kt
-│   │
-│   └── edit/                       # 编辑页
-│       ├── EditScreen.kt          # 编辑页主界面
-│       ├── EditViewModel.kt       # 编辑页ViewModel
-│       └── components/            # 编辑页组件
-│           ├── EditableReminderSection.kt
-│           ├── EditableTimeSlotSection.kt
-│           └── MultiLineTextField.kt
-│
-├── notification/                   # 通知模块
-│   ├── NotificationHelper.kt      # 通知辅助类
-│   ├── ReminderWorker.kt          # 定时任务Worker
-│   └── NotificationScheduler.kt   # 通知调度器
-│
-├── navigation/                     # 导航配置
-│   └── NavGraph.kt                # 导航图
-│
-├── MainActivity.kt                 # 主Activity
-└── EveryDayApp.kt                 # Application类
-```
+- `app/src/main/AndroidManifest.xml`
+  - `application name=".EveryDayApp"`、主题与图标、备份/数据提取规则。
+  - 权限：
+    - `POST_NOTIFICATIONS`（Android 13+）
+    - `SCHEDULE_EXACT_ALARM`（可选，精确提醒）
+  - `MainActivity` 为入口，带 `LAUNCHER` Intent 过滤。
 
-## 编译运行
+---
 
-### 环境要求
-- Android Studio Hedgehog (2023.1.1) 或更高版本
-- JDK 11 或更高版本
-- Android SDK 35
-- Gradle 8.9.1
+## 代码与资源目录
 
-### 构建项目
+- `app/src/main/java/com/wangfangjia/everyday/`
+  - `data/`
+    - `models/`：数据模型（`DailyData.kt`、`TimeSlotTask.kt`、`TimeSlotDefinition.kt`）
+    - `DataStoreManager.kt`：DataStore 读写与序列化封装
+    - `repository/`：仓库层（`DailyRepository.kt`），聚合数据访问与业务逻辑
+  - `ui/`
+    - `theme/`：主题、配色与字体（`Color.kt`、`Theme.kt`、`Type.kt`）
+    - `components/`：通用组件（`CalendarDialog.kt`、`EmptyPlaceholder.kt`）
+    - `home/`：首页
+      - `HomeScreen.kt`、`HomeViewModel.kt`
+      - `components/`：`ReminderSection.kt`、`TimeSlotSection.kt`、`HappyCalendarSection.kt`、`DiarySection.kt`
+    - `edit/`：编辑页
+      - `EditScreen.kt`、`EditViewModel.kt`
+      - `components/`：`EditableReminderSection.kt`、`EditableTimeSlotSection.kt`、`MultiLineTextField.kt`
+  - `notification/`
+    - `NotificationHelper.kt`：通知渠道与展示
+    - `ReminderWorker.kt`：WorkManager 后台任务
+    - `NotificationScheduler.kt`：统一调度（13:00/19:00/23:00）
+  - `navigation/`
+    - `NavGraph.kt`：导航图与路由
+  - `MainActivity.kt`：应用主入口，承载导航与根 UI
+  - `EveryDayApp.kt`：`Application`，完成初始化与全局配置
 
-```bash
-# 清理项目
-./gradlew clean
+- `app/src/main/res/`
+  - `values/`：`colors.xml`、`themes.xml`、`strings.xml`
+  - `xml/`：`backup_rules.xml`、`data_extraction_rules.xml`
+  - `drawable/`：图标资源（含 `app_icon.png`）
+  - `mipmap-*`：启动图标（各种密度）
 
-# 构建Debug版本
-./gradlew assembleDebug
+- 测试目录
+  - `app/src/androidTest/`：仪器测试骨架
+  - `app/src/test/`：单元测试骨架
 
-# 安装到设备
-./gradlew installDebug
+---
 
-# 运行
-./gradlew app:installDebug
-```
+## 架构与数据流
 
-### 权限说明
+- **MVVM**：`ViewModel` 暴露 `StateFlow` 状态；`Composable` 订阅渲染；用户交互触发仓库更新。
+- **Repository**：封装 DataStore 存取与业务逻辑（如提醒复用、日期格式化、任务勾选状态）。
+- **DataStore + Gson**：每日数据 JSON 化存储，按日期键值管理。
+- **WorkManager + Notification**：按固定时间触发提醒通知；可扩展更多时间点或类型。
+- **Navigation**：路由与参数（如日期）在 `NavGraph.kt` 管理。
 
-应用需要以下权限：
-- `POST_NOTIFICATIONS` - 发送推送通知（Android 13+）
-- `SCHEDULE_EXACT_ALARM` - 精确闹钟（可选，用于精确时间提醒）
+---
 
-## UI设计风格
+## 构建与运行
 
-采用Material Design 3简约风格：
-- 柔和清爽的配色方案
-- 圆角卡片设计
-- 简洁的交互体验
-- 支持深色模式
+- 环境要求
+  - Android Studio Hedgehog (2023.1.1)+
+  - JDK 11+
+  - Android SDK 35
+- 常用命令
+  ```bash
+  ./gradlew clean
+  ./gradlew assembleDebug
+  ./gradlew installDebug
+  ```
+- 发布与签名
+  - 参考 `BUILD_RELEASE.md`（签名密钥、`keystore.properties`、`signingConfigs`、ProGuard/R8 建议与 `bundleRelease`/`assembleRelease` 流程）。
 
-### 配色方案
-- **Primary（主色）**: 柔和的蓝色 (#6B9AE4)
-- **Secondary（辅助色）**: 清新的绿色 (#8DBFA6)
-- **Tertiary（强调色）**: 温暖的橙色 (#FFB366)
+---
 
-## 数据存储
+## 维护与扩展
 
-### 本地存储
-使用DataStore (Preferences) 存储所有数据：
-- 每日数据以JSON格式序列化存储
-- 支持按日期快速查询
-- 自动维护日期列表
+- 开发规范与常见问题：见 `DEVELOPMENT_GUIDE.md`。
+- 新功能建议路径：
+  - 数据模型 → 仓库 → UI 页面/组件 → 导航/通知（如需）。
+- 混淆与体积优化：
+  - 启用 `isMinifyEnabled` / `isShrinkResources` 后，按需增补保留规则。
+  - 使用 APK/AAB 分析工具优化资源占用。
 
-### 数据格式
-```kotlin
-DailyData(
-    date: String,              // yyyy-MM-dd
-    reminders: List<String>,   // 提醒列表
-    timeSlotTasks: List<TimeSlotTask>,  // 时间段任务
-    happyCalendar: String,     // 快乐日历
-    diary: String              // 日记
-)
-```
+---
 
-## 未来规划
-
-- [ ] 后端API对接
-- [ ] 数据云同步
-- [ ] 任务统计和分析
-- [ ] 自定义时间段
-- [ ] 任务标签和分类
-- [ ] 导出数据功能
-- [ ] 主题自定义
-
-## 开发者
-
-王方甲
-
-## 许可证
-
-版权所有 © 2025
+## 致谢
+- 作者：wangfangjia
 

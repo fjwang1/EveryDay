@@ -1,5 +1,7 @@
 package com.wangfangjia.everyday.ui.home
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -17,9 +19,7 @@ import com.wangfangjia.everyday.ui.home.components.*
 import androidx.compose.ui.res.stringResource
 import com.wangfangjia.everyday.R
 
-/**
- * 首页
- */
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
@@ -106,10 +106,10 @@ fun HomeScreen(
                         }
                     )
                     
-                    // 快乐日历模块（只在有内容时显示）
+                    // 快乐日历模块
                     HappyCalendarSection(content = data.happyCalendar)
                     
-                    // 日记模块（只在有内容时显示）
+                    // 日记模块
                     DiarySection(content = data.diary)
                 }
             }
