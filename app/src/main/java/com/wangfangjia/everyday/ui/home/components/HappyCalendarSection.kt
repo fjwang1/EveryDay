@@ -25,7 +25,8 @@ fun HappyCalendarSection(
         modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface
+            containerColor = MaterialTheme.colorScheme.surface,
+            contentColor = MaterialTheme.colorScheme.onSurface
         ),
         elevation = CardDefaults.cardElevation(
             defaultElevation = 0.dp
@@ -37,7 +38,7 @@ fun HappyCalendarSection(
                 .padding(20.dp)
         ) {
             Text(
-                text = "快乐日历",
+                text = "日记",
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier.padding(bottom = 12.dp)
@@ -45,7 +46,7 @@ fun HappyCalendarSection(
 
             if (content.isEmpty()) {
                 Text(
-                    text = "暂无快乐时刻",
+                    text = "暂无日记",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f)
                 )

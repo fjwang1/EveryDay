@@ -35,7 +35,7 @@ fun HomeScreen(
     var showCalendarDialog by remember { mutableStateOf(false) }
     
     Scaffold(
-        containerColor = MaterialTheme.colorScheme.background,
+        containerColor = MaterialTheme.colorScheme.surfaceVariant,
         topBar = {
             TopAppBar(
                 title = {
@@ -92,7 +92,7 @@ fun HomeScreen(
                         .fillMaxSize()
                         .padding(paddingValues)
                         .verticalScroll(rememberScrollState())
-                        .padding(horizontal = 20.dp, vertical = 16.dp),
+                        .padding(horizontal = 12.dp, vertical = 16.dp),
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     // 每日提醒模块
@@ -110,7 +110,7 @@ fun HomeScreen(
                     HappyCalendarSection(content = data.happyCalendar)
                     
                     // 日记模块
-                    DiarySection(content = data.diary)
+                    HappyCalendarSection(content = data.diary)
                 }
             }
         }
