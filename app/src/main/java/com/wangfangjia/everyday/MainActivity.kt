@@ -11,6 +11,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.core.content.ContextCompat
+import androidx.core.view.WindowCompat
+import androidx.compose.runtime.SideEffect
+import androidx.compose.ui.platform.LocalView
+import androidx.compose.foundation.isSystemInDarkTheme
+import android.graphics.Color
 import androidx.navigation.compose.rememberNavController
 import com.wangfangjia.everyday.data.DataStoreManager
 import com.wangfangjia.everyday.data.repository.DailyRepository
@@ -31,6 +36,10 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         
+        // 启用 edge-to-edge 并将状态栏设为透明
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+        window.statusBarColor = Color.TRANSPARENT
+        
         // 初始化Repository
         val dataStoreManager = DataStoreManager(applicationContext)
         repository = DailyRepository(dataStoreManager)
@@ -40,6 +49,12 @@ class MainActivity : ComponentActivity() {
         
         setContent {
             EveryDayTheme {
+                // 根据明暗主题动态设置状态栏图标颜色（明亮主题下使用深色图标）
+                val view = LocalView.current
+                val darkIcons = !isSystemInDarkTheme()
+                SideEffect {
+                    WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = darkIcons
+                }
                 Surface(
                     modifier = Modifier.fillMaxSize()
                 ) {

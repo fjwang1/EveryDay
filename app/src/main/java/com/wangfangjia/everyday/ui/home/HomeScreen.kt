@@ -37,7 +37,9 @@ fun HomeScreen(
     Scaffold(
         containerColor = MaterialTheme.colorScheme.surfaceVariant,
         topBar = {
+            // 让顶部栏避开系统状态栏
             TopAppBar(
+                modifier = Modifier.statusBarsPadding(),
                 title = {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -69,7 +71,7 @@ fun HomeScreen(
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.background
+                    containerColor = MaterialTheme.colorScheme.surfaceVariant,
                 )
             )
         }
