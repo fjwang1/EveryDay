@@ -83,7 +83,7 @@ private fun EditableTimeSlotItem(
             onValueChange = { newDetail ->
                 onTaskChanged(task.copy(taskDetail = newDetail))
             },
-            label = { Text("任务详情") },
+
             placeholder = {
                 Text(
                     text = "输入今日任务内容...",
@@ -106,7 +106,8 @@ private fun EditableTimeSlotItem(
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = MaterialTheme.colorScheme.primary,
                 unfocusedBorderColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)
-            )
+            ),
+            textStyle = MaterialTheme.typography.bodyMedium
         )
         
         Spacer(modifier = Modifier.height(12.dp))
@@ -139,7 +140,8 @@ private fun EditableTimeSlotItem(
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = MaterialTheme.colorScheme.primary,
                 unfocusedBorderColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)
-            )
+            ),
+            textStyle = MaterialTheme.typography.bodyMedium
         )
         
         // 完成状态勾选框

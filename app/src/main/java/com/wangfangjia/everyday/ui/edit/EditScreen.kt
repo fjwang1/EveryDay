@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.wangfangjia.everyday.data.repository.DailyRepository
 import com.wangfangjia.everyday.ui.components.CalendarDialog
 import com.wangfangjia.everyday.ui.edit.components.*
@@ -117,7 +118,7 @@ fun EditScreen(
                     .fillMaxSize()
                     .padding(paddingValues)
                     .verticalScroll(rememberScrollState())
-                    .padding(horizontal = 20.dp, vertical = 16.dp),
+                    .padding(horizontal = 12.dp, vertical = 16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 // 每日提醒模块（可编辑）
@@ -164,11 +165,12 @@ fun EditScreen(
                             onValueChange = { newContent ->
                                 viewModel.updateHappyCalendar(newContent)
                             },
+                            placeholder = "记录今日快乐的事情",
                             minLines = 3
                         )
                     }
                 }
-                
+
                 // 日记模块（可编辑）
                 Card(
                     modifier = Modifier.fillMaxWidth(),
@@ -191,20 +193,21 @@ fun EditScreen(
                             color = MaterialTheme.colorScheme.onSurface,
                             modifier = Modifier.padding(bottom = 12.dp)
                         )
-                        
+
                         MultiLineTextField(
                             value = data.diary,
                             onValueChange = { newContent ->
                                 viewModel.updateDiary(newContent)
                             },
-                            minLines = 5
+                            placeholder = "记录今日的感想和总结",
+                            minLines = 5,
                         )
                     }
                 }
             }
         }
     }
-    
+
     // 日历弹窗
     if (showCalendarDialog) {
         CalendarDialog(
@@ -219,7 +222,7 @@ fun EditScreen(
             onDismiss = { showCalendarDialog = false }
         )
     }
-    
+
     // 未保存更改提示对话框
     if (showUnsavedChangesDialog) {
         AlertDialog(
@@ -250,4 +253,3 @@ fun EditScreen(
         )
     }
 }
-

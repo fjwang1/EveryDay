@@ -21,25 +21,20 @@ import androidx.compose.ui.unit.dp
 fun MultiLineTextField(
     value: String,
     onValueChange: (String) -> Unit,
-    label: String,
+    placeholder: String? = null,
     modifier: Modifier = Modifier,
     minLines: Int = 3
 ) {
     OutlinedTextField(
         value = value,
         onValueChange = onValueChange,
-        label = { Text(label) },
+        label = null,
         placeholder = {
             Text(
-                text = label,
+                text = placeholder ?: "",
                 style = MaterialTheme.typography.bodySmall.merge(
                     TextStyle(
-                        brush = Brush.linearGradient(
-                            colors = listOf(
-                                Color(0xFF9AA0A6).copy(alpha = 0.6f),
-                                Color(0xFF9AA0A6).copy(alpha = 0.2f)
-                            )
-                        )
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
                     )
                 )
             )
