@@ -17,6 +17,7 @@ object DefaultTimeSlots {
     val slots = listOf(
         TimeSlotDefinition("slot_8_9_30", "8:00", "9:30", "8:00～9:30"),
         TimeSlotDefinition("slot_10_11", "10:00", "11:00", "10:00～11:00"),
+        TimeSlotDefinition("slot_11_12", "11:00", "12:00", "11:00～12:00"),
         TimeSlotDefinition("slot_14_15", "14:00", "15:00", "2:00～3:00"),
         TimeSlotDefinition("slot_15_16", "15:00", "16:00", "3:00～4:00"),
         TimeSlotDefinition("slot_16_17", "16:00", "17:00", "4:00～5:00"),
