@@ -26,23 +26,23 @@ import com.wangfangjia.everyday.ui.edit.components.*
 fun EditScreen(
     date: String,
     repository: DailyRepository,
-    onNavigateBack: () -> Unit
+    onNavigateBack: (String?) -> Unit
 ) {
     val viewModel = remember { EditViewModel(repository, date) }
     val currentDate by viewModel.currentDate.collectAsState()
     val draftData by viewModel.draftData.collectAsState()
     val isSaving by viewModel.isSaving.collectAsState()
     val hasUnsavedChanges by viewModel.hasUnsavedChanges.collectAsState()
-    
+
     var showCalendarDialog by remember { mutableStateOf(false) }
     var showUnsavedChangesDialog by remember { mutableStateOf(false) }
-    
+
     // 获取所有有数据的日期（用于日历显示）
     var datesWithData by remember { mutableStateOf<List<String>>(emptyList()) }
     LaunchedEffect(Unit) {
         datesWithData = repository.getAllDates()
     }
-    
+
     Scaffold(
         containerColor = MaterialTheme.colorScheme.surfaceVariant,
         topBar = {
@@ -72,7 +72,7 @@ fun EditScreen(
                         if (hasUnsavedChanges) {
                             showUnsavedChangesDialog = true
                         } else {
-                            onNavigateBack()
+                            onNavigateBack(null)
                         }
                     }) {
                         Icon(
@@ -86,7 +86,7 @@ fun EditScreen(
                     IconButton(
                         onClick = {
                             viewModel.saveData {
-                                onNavigateBack()
+                                onNavigateBack(currentDate)
                             }
                         },
                         enabled = !isSaving
@@ -128,7 +128,7 @@ fun EditScreen(
                         viewModel.updateReminders(newReminders)
                     }
                 )
-                
+
                 // 时间段任务模块（可编辑）
                 EditableTimeSlotSection(
                     timeSlotTasks = data.timeSlotTasks,
@@ -136,7 +136,7 @@ fun EditScreen(
                         viewModel.updateTimeSlotTask(updatedTask)
                     }
                 )
-                
+
                 // 快乐日历模块（可编辑）
                 Card(
                     modifier = Modifier.fillMaxWidth(),
@@ -159,7 +159,7 @@ fun EditScreen(
                             color = MaterialTheme.colorScheme.onSurface,
                             modifier = Modifier.padding(bottom = 12.dp)
                         )
-                        
+
                         MultiLineTextField(
                             value = data.happyCalendar,
                             onValueChange = { newContent ->
@@ -233,7 +233,7 @@ fun EditScreen(
                 TextButton(
                     onClick = {
                         viewModel.saveData {
-                            onNavigateBack()
+                            onNavigateBack(currentDate)
                         }
                     }
                 ) {
@@ -244,7 +244,7 @@ fun EditScreen(
                 TextButton(
                     onClick = {
                         showUnsavedChangesDialog = false
-                        onNavigateBack()
+                        onNavigateBack(null)
                     }
                 ) {
                     Text("不保存")

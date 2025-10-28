@@ -14,9 +14,10 @@ import com.wangfangjia.everyday.ui.home.HomeScreen
  * 导航路由定义
  */
 object Routes {
-    const val HOME = "home"
+    const val HOME = "home?date={date}"
     const val EDIT = "edit/{date}"
-    
+
+    fun homeRoute(date: String? = null) = if (date != null) "home?date=$date" else "home"
     fun editRoute(date: String) = "edit/$date"
 }
 
@@ -30,18 +31,29 @@ fun AppNavGraph(
 ) {
     NavHost(
         navController = navController,
-        startDestination = Routes.HOME
+        startDestination = Routes.homeRoute()
     ) {
         // 首页
-        composable(Routes.HOME) {
+        composable(
+            route = Routes.HOME,
+            arguments = listOf(
+                navArgument("date") {
+                    type = NavType.StringType
+                    nullable = true
+                    defaultValue = null
+                }
+            )
+        ) { backStackEntry ->
+            val dateParam = backStackEntry.arguments?.getString("date")
             HomeScreen(
                 repository = repository,
+                initialDate = dateParam,
                 onNavigateToEdit = { date ->
                     navController.navigate(Routes.editRoute(date))
                 }
             )
         }
-        
+
         // 编辑页
         composable(
             route = Routes.EDIT,
@@ -53,11 +65,15 @@ fun AppNavGraph(
             EditScreen(
                 date = date,
                 repository = repository,
-                onNavigateBack = {
+                onNavigateBack = { returnDate ->
                     navController.popBackStack()
+                    if (returnDate != null) {
+                        navController.navigate(Routes.homeRoute(returnDate)) {
+                            popUpTo(Routes.homeRoute()) { inclusive = true }
+                        }
+                    }
                 }
             )
         }
     }
 }
-

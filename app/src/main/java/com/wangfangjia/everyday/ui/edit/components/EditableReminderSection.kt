@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.IntOffset
@@ -83,20 +84,22 @@ fun EditableReminderSection(
                 )
             } else {
                 reminders.forEachIndexed { index, reminder ->
-                    SwipeToDeleteItem(
-                        reminder = reminder,
-                        onDelete = {
-                            val newReminders = reminders.toMutableList()
-                            newReminders.removeAt(index)
-                            onRemindersChanged(newReminders)
-                        },
-                        onEdit = {
-                            editingIndex = index
-                            editingText = reminder
-                            showAddDialog = true
-                        }
-                    )
-                    
+                    key(reminder + index) { // 添加唯一key确保每个item状态独立
+                        SwipeToDeleteItem(
+                            reminder = reminder,
+                            onDelete = {
+                                val newReminders = reminders.toMutableList()
+                                newReminders.removeAt(index)
+                                onRemindersChanged(newReminders)
+                            },
+                            onEdit = {
+                                editingIndex = index
+                                editingText = reminder
+                                showAddDialog = true
+                            }
+                        )
+                    }
+
                     if (index < reminders.size - 1) {
                         Spacer(modifier = Modifier.height(8.dp))
                     }
@@ -171,7 +174,6 @@ fun EditableReminderSection(
         )
     }
 }
-
 @Composable
 private fun SwipeToDeleteItem(
     reminder: String,
@@ -179,44 +181,64 @@ private fun SwipeToDeleteItem(
     onEdit: () -> Unit
 ) {
     var offsetX by remember { mutableStateOf(0f) }
-    
+    val deleteButtonWidth = 60.dp // 减少宽度从80dp到60dp
+    val deleteButtonWidthPx = with(LocalDensity.current) { deleteButtonWidth.toPx() }
+
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .height(56.dp)
     ) {
-        // 背景删除按钮
-        Row(
+        // 背景删除按钮 - 固定在右侧，左侧无圆角
+        Box(
             modifier = Modifier
-                .fillMaxSize()
-                .background(Color.Red, RoundedCornerShape(8.dp))
-                .padding(horizontal = 16.dp),
-            horizontalArrangement = Arrangement.End,
-            verticalAlignment = Alignment.CenterVertically
+                .width(deleteButtonWidth)
+                .fillMaxHeight()
+                .align(Alignment.CenterEnd)
+                .background(
+                    Color.Red,
+                    RoundedCornerShape(
+                        topStart = 0.dp,
+                        topEnd = 8.dp,
+                        bottomStart = 0.dp,
+                        bottomEnd = 8.dp
+                    )
+                ),
+            contentAlignment = Alignment.Center
         ) {
-            IconButton(onClick = onDelete) {
+            IconButton(
+                onClick = onDelete,
+                modifier = Modifier.size(40.dp) // 稍微减小按钮尺寸
+            ) {
                 Icon(
                     imageVector = Icons.Default.Delete,
                     contentDescription = "删除",
-                    tint = Color.White
+                    tint = Color.White,
+                    modifier = Modifier.size(20.dp) // 稍微减小图标尺寸
                 )
             }
         }
-        
-        // 提醒内容卡片
+
+        // 提醒内容卡片 - 可滑动
         Surface(
             modifier = Modifier
-                .fillMaxSize()
+                .fillMaxWidth()
+                .fillMaxHeight()
                 .offset { IntOffset(offsetX.roundToInt(), 0) }
-                .pointerInput(Unit) {
+                .pointerInput(reminder) { // 使用reminder作为key，确保每个item独立
                     detectHorizontalDragGestures(
                         onDragEnd = {
-                            // 如果滑动超过一定距离，则显示删除按钮
-                            offsetX = if (offsetX < -50) -100f else 0f
+                            // 滑动超过一半删除按钮宽度就完全展开
+                            offsetX = if (offsetX < -deleteButtonWidthPx / 2) {
+                                -deleteButtonWidthPx
+                            } else {
+                                0f
+                            }
                         },
                         onHorizontalDrag = { _, dragAmount ->
                             val newOffset = offsetX + dragAmount
-                            offsetX = newOffset.coerceIn(-100f, 0f)
+                            // 限制滑动范围：最多向左滑动删除按钮的宽度
+                            offsetX = newOffset.coerceIn(-deleteButtonWidthPx, 0f)
                         }
                     )
                 },

@@ -24,9 +24,10 @@ import com.wangfangjia.everyday.R
 @Composable
 fun HomeScreen(
     repository: DailyRepository,
+    initialDate: String? = null,
     onNavigateToEdit: (String) -> Unit
 ) {
-    val viewModel = remember { HomeViewModel(repository) }
+    val viewModel = remember { HomeViewModel(repository, initialDate) }
     val currentDate by viewModel.currentDate.collectAsState()
     val dailyData by viewModel.dailyData.collectAsState()
     val datesWithData by viewModel.datesWithData.collectAsState()

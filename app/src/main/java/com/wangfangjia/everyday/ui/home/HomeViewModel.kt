@@ -13,11 +13,12 @@ import kotlinx.coroutines.launch
  * 首页ViewModel
  */
 class HomeViewModel(
-    private val repository: DailyRepository
+    private val repository: DailyRepository,
+    initialDate: String? = null
 ) : ViewModel() {
-    
+
     // 当前选中的日期
-    private val _currentDate = MutableStateFlow(repository.getTodayDate())
+    private val _currentDate = MutableStateFlow(initialDate ?: repository.getTodayDate())
     val currentDate: StateFlow<String> = _currentDate.asStateFlow()
     
     // 当前日期的数据
