@@ -21,7 +21,7 @@ import com.wangfangjia.everyday.ui.edit.components.*
 /**
  * 编辑页
  */
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun EditScreen(
     date: String,
@@ -117,6 +117,8 @@ fun EditScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(paddingValues)
+                    .imePadding()  // 为键盘留出空间
+                    .imeNestedScroll()  // 让滚动与键盘同步
                     .verticalScroll(rememberScrollState())
                     .padding(horizontal = 12.dp, vertical = 16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
